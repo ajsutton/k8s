@@ -1,4 +1,6 @@
 argo-cd:
+  global:
+    domain: big
   dex:
     enabled: false
   notifications:
