@@ -91,10 +91,10 @@ grafana:
         isDefault: true
 
   dashboards:
-    prometheus-stats:
-      # Ref: https://grafana.com/dashboards/2
-      gnetId: 2
-      revision: 2
+    metrics-stats:
+      # Ref: https://grafana.com/dashboards/10229
+      gnetId: 10229
+      revision: 34
       datasource: Metrics
 
   grafana.ini:
