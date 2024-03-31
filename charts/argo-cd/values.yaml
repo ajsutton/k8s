@@ -8,8 +8,6 @@ argo-cd:
   applicationSet:
     enabled: false
   server:
-    service:
-      servicePortHttps: 9003
     ingress:
       enabled: true
       ingressClassName: nginx
