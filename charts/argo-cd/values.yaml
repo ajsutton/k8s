@@ -7,10 +7,11 @@ argo-cd:
     enabled: false
   server:
     insecure: true
-    ingressClassName: nginx
-    annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    tls: false
+    ingress:
+      ingressClassName: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      tls: false
     extraArgs:
       - --insecure
