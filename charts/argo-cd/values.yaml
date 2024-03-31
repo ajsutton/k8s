@@ -12,7 +12,8 @@ argo-cd:
     enabled: false
   server:
     service:
-      servicePortHttp: 8082
+      servicePortHttp: 9003
     ingress:
       enabled: true
+      ingressClassName: nginx
       tls: false
