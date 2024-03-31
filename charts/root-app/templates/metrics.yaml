@@ -14,6 +14,8 @@ spec:
     server: https://kubernetes.default.svc
     namespace: metrics
   syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
     automated:
       prune: true
       selfHeal: true
