@@ -13,9 +13,8 @@ victoria-metrics-single:
       # -- Enable deployment of ingress for server component
       enabled: true
       # -- Ingress annotations
-      annotations: {}
-      #   kubernetes.io/ingress.class: nginx
-      #   kubernetes.io/tls-acme: 'true'
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
 
       # -- Array of host objects
       hosts:
