@@ -1,4 +1,10 @@
 victoria-metrics-single:
+  rbac:
+    create: false
+
+  serviceAccount:
+    # -- Create service account.
+    create: false
 
   server:
     # -- Enable deployment of server component. Deployed as StatefulSet
