@@ -1,9 +1,9 @@
 argo-cd:
   configs:
-    cm:
-      params:
-        server.insecure: true
-        server.rootpath: "/argocd/"
+    params:
+      server.insecure: true
+      server.basehref: "/argocd/"
+      server.rootpath: "/argocd/"
   global:
     domain: big
   dex:
