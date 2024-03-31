@@ -1,4 +1,7 @@
 argo-cd:
+  configs:
+    params:
+      server.insecure: true
   global:
     domain: big
   dex:
@@ -8,13 +11,17 @@ argo-cd:
   applicationSet:
     enabled: false
   server:
-    insecure: true
+    service:
+      servicePortHttp: 8082
     ingress:
-      enabled: false
+      enabled: true
       ingressClassName: nginx
       annotations:
         nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       tls: false
+      extraHosts:
+        - name: big.local
+          path: /
     extraArgs:
       - --insecure
