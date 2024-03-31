@@ -14,17 +14,18 @@ victoria-metrics-single:
       enabled: true
       # -- Ingress annotations
       annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: /
+        nginx.ingress.kubernetes.io/use-regex: "true"
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
 
       # -- Array of host objects
       hosts:
         - name: big
-          path: /metrics
+          path: /metrics(/|$)(.*)
           port: http
 
       ingressClassName: public
       # -- pathType is only for k8s >= 1.1=
-      pathType: Prefix
+      pathType: ImplementationSpecific
 
     # -- Scrape configuration for victoriametrics
     scrape:
