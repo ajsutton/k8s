@@ -12,7 +12,7 @@ spec:
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
-    namespace: metrics
+    namespace: logs
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
