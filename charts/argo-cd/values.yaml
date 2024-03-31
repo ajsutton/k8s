@@ -15,13 +15,4 @@ argo-cd:
       servicePortHttp: 8082
     ingress:
       enabled: true
-      ingressClassName: nginx
-      annotations:
-        nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       tls: false
-      extraHosts:
-        - name: big.local
-          path: /
-    extraArgs:
-      - --insecure
