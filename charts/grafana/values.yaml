@@ -91,11 +91,12 @@ grafana:
         isDefault: true
 
   dashboards:
-    metrics-stats:
-      # Ref: https://grafana.com/dashboards/10229
-      gnetId: 10229
-      revision: 34
-      datasource: Metrics
+    default:
+      metrics-stats:
+        # Ref: https://grafana.com/dashboards/10229
+        gnetId: 10229
+        revision: 34
+        datasource: Metrics
 
   grafana.ini:
     server:
