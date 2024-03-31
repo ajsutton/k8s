@@ -1,4 +1,8 @@
 argo-cd:
+  configs:
+    cm:
+      params:
+        server.insecure: true
   global:
     domain: big
   dex:
