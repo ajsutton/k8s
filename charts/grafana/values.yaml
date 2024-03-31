@@ -84,7 +84,7 @@ grafana:
       datasources:
       - name: Metrics
         type: prometheus
-        url: http://victoria-metrics-victoria-metrics-single-server.metrics.svc.cluster.local
+        url: http://victoria-metrics-victoria-metrics-single-server.metrics.svc.cluster.local:8428
         access: proxy
         isDefault: true
 
