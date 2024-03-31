@@ -45,9 +45,7 @@ grafana:
     pathType: ImplementationSpecific
 
     hosts:
-      - name: big
-        path: /grafana(/|$)(.*)
-        port: http
+      - big
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
