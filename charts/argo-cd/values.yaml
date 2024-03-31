@@ -16,3 +16,5 @@ argo-cd:
       enabled: true
       ingressClassName: public
       tls: false
+    extraArgs:
+      - --insecure
