@@ -1,0 +1,27 @@
+victoria-metrics-single:
+
+  server:
+    # -- Enable deployment of server component. Deployed as StatefulSet
+    enabled: true
+    ingress:
+      # -- Enable deployment of ingress for server component
+      enabled: true
+      # -- Ingress annotations
+      annotations: {}
+      #   kubernetes.io/ingress.class: nginx
+      #   kubernetes.io/tls-acme: 'true'
+
+      # -- Array of host objects
+      hosts:
+        - name: big
+          path: /metrics
+          port: http
+
+      ingressClassName: public
+      # -- pathType is only for k8s >= 1.1=
+      pathType: Prefix
+
+    # -- Scrape configuration for victoriametrics
+    scrape:
+      # -- If true scrapes targets, creates config map or use specified one with scrape targets
+      enabled: true
