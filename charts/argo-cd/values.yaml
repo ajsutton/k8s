@@ -10,7 +10,7 @@ argo-cd:
   server:
     ingress:
       enabled: true
-      ingressClassName: nginx
+      ingressClassName: public
       annotations:
         nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
