@@ -3,6 +3,7 @@ argo-cd:
     cm:
       params:
         server.insecure: true
+        server.rootpath: "/argocd/"
   global:
     domain: big
   dex:
@@ -15,6 +16,7 @@ argo-cd:
     ingress:
       enabled: true
       ingressClassName: public
+      path: "/argocd/"
       tls: false
     extraArgs:
       - --insecure
