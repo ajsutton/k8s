@@ -1,0 +1,30 @@
+victoria-logs-single:
+
+  server:
+    enabled: true
+
+    persistentVolume:
+      # -- Create/use Persistent Volume Claim for server component. Empty dir if false
+      enabled: true
+      # -- Size of the volume. Should be calculated based on the logs you send and retention policy you set.
+      size: 3Gi
+
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/use-regex: "true"
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+      # -- Array of host objects
+      hosts:
+        - name: big
+          path: /logs(/|$)(.*)
+          port: http
+
+      ingressClassName: public
+      # -- pathType is only for k8s >= 1.1=
+      pathType: ImplementationSpecific
+
+  fluent-bit:
+    # -- Enable deployment of fluent-bit
+    enabled: true
