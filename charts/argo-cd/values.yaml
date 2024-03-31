@@ -16,8 +16,6 @@ argo-cd:
     ingress:
       enabled: true
       ingressClassName: public
-      annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: /
       path: "/argocd/"
       tls: false
     extraArgs:
