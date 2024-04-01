@@ -1,5 +1,5 @@
 victoria-metrics-k8s-stack:
-  nameOverride: "metrics"
+  nameOverride: ""
   fullnameOverride: ""
   tenant: "0"
   # -- If this chart is used in "Argocd" with "releaseName" field then
