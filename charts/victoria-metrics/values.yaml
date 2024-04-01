@@ -1,6 +1,6 @@
 victoria-metrics-k8s-stack:
   nameOverride: "metrics"
-  fullnameOverride: ""
+  fullnameOverride: "metrics"
   tenant: "0"
   # -- If this chart is used in "Argocd" with "releaseName" field then
   # -- VMServiceScrapes couldn't select the proper services.
