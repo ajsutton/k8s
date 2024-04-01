@@ -81,6 +81,7 @@ reth:
       - host: big
         paths:
           - path: /eth/sepolia/el
+            pathType: Prefix
 
   # -- P2P Port
   p2pPort: 30303
