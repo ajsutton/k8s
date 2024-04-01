@@ -1,6 +1,6 @@
 dependencies:
-- name: victoria-metrics-single
-  repository: https://victoriametrics.github.io/helm-charts/
-  version: 0.9.17
-digest: sha256:84c3bbe340f0d4285642b14739f431fcb016c7ce950ce5388af153d24c09b4f2
-generated: "2024-03-31T21:04:17.171180848+10:00"
+- name: kube-prometheus-stack
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 57.2.0
+digest: sha256:4bd93f23f17215f1a1997f6427181aa0cc935b189d8176953190c13ef521b553
+generated: "2024-04-01T14:16:49.721083+10:00"
