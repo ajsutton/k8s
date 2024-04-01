@@ -42,6 +42,11 @@ kube-prometheus-stack:
 
     prometheusSpec:
       externalUrl: "http://big/metrics"
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+      probeSelectorNilUsesHelmValues: false
+      scrapeConfigSelectorNilUsesHelmValues: false
+      ruleSelectorNilUsesHelmValues: false
       storageSpec:
       ## Using PersistentVolumeClaim
         volumeClaimTemplate:
