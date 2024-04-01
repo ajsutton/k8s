@@ -1,33 +1,215 @@
-victoria-metrics-single:
-  rbac:
-    create: false
+nameOverride: ""
+fullnameOverride: ""
+tenant: "0"
+# -- If this chart is used in "Argocd" with "releaseName" field then
+# -- VMServiceScrapes couldn't select the proper services.
+# -- For correct working need set value 'argocdReleaseOverride=$ARGOCD_APP_NAME'
+argocdReleaseOverride: ""
 
-  serviceAccount:
-    # -- Create service account.
-    create: false
+# -- victoria-metrics-operator dependency chart configuration.
+# -- For possible values refer to https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-operator#parameters
+# -- also checkout here possible ENV variables to configure operator behaviour https://docs.victoriametrics.com/operator/vars.html
+victoria-metrics-operator:
+  enabled: true
+  # -- Tells helm to clean up vm cr resources when uninstalling
+  cleanupCRD: true
+  cleanupImage:
+    repository: gcr.io/google_containers/hyperkube
+    tag: v1.18.0
+    pullPolicy: IfNotPresent
 
-  server:
-    # -- Enable deployment of server component. Deployed as StatefulSet
+  createCRD: false # we disable crd creation by operator chart as we create them in this chart
+  operator:
+    # -- By default, operator converts prometheus-operator objects.
+    disable_prometheus_converter: true
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: false
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # -- If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+## -- Create default rules for monitoring the cluster
+defaultRules:
+  create: true
+  rules:
+    etcd: true
+    general: true
+    k8s: true
+    kubeApiserver: true
+    kubeApiserverAvailability: true
+    kubeApiserverBurnrate: true
+    kubeApiserverHistogram: true
+    kubeApiserverSlos: true
+    kubelet: true
+    kubePrometheusGeneral: true
+    kubePrometheusNodeRecording: true
+    kubernetesApps: true
+    kubernetesResources: true
+    kubernetesStorage: true
+    kubernetesSystem: true
+    kubeScheduler: true
+    kubeStateMetrics: true
+    network: true
+    node: true
+    vmagent: true
+    vmsingle: true
+    vmcluster: true
+    vmhealth: true
+    alertmanager: true
+
+  # -- Runbook url prefix for default rules
+  runbookUrl: https://runbooks.prometheus-operator.dev/runbooks
+
+  # Disabled VMRules
+  disabled: {}
+
+  ## Reduce app namespace alert scope
+  appNamespacesTarget: ".*"
+
+  # -- Labels for default rules
+  labels: {}
+  # -- Annotations for default rules
+  annotations: {}
+
+  # -- Additional labels for PrometheusRule alerts
+  additionalRuleLabels: {}
+
+  # -- Optional HTTP URL parameters added to each rule request
+  params: {}
+
+## -- Create default dashboards
+defaultDashboardsEnabled: true
+
+## -- Create experimental dashboards
+experimentalDashboardsEnabled: true
+
+## -- Create dashboards as CRDs (reuqires grafana-operator to be installed)
+grafanaOperatorDashboardsFormat:
+  enabled: false
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  allowCrossNamespaceImport: false
+
+##############
+
+# -- Configures vmsingle params
+vmsingle:
+  annotations: {}
+  enabled: true
+  # spec for VMSingle crd
+  # https://docs.victoriametrics.com/operator/api.html#vmsinglespec
+  spec:
+    image:
+      tag: v1.99.0
+    retentionPeriod: "14"
+    replicaCount: 1
+    extraArgs: {}
+    storage:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
+  ingress:
     enabled: true
-    ingress:
-      # -- Enable deployment of ingress for server component
-      enabled: true
-      # -- Ingress annotations
-      annotations:
-        nginx.ingress.kubernetes.io/use-regex: "true"
-        nginx.ingress.kubernetes.io/rewrite-target: /$2
+    ingressClassName: public
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    annotations:
+      nginx.ingress.kubernetes.io/use-regex: "true"
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /metrics(/|$)(.*)
+    # pathType is only for k8s > 1.19
+    pathType: ImplementationSpecific
 
-      # -- Array of host objects
-      hosts:
-        - name: big
-          path: /metrics(/|$)(.*)
-          port: http
+    hosts:
+      - big
 
-      ingressClassName: public
-      # -- pathType is only for k8s >= 1.1=
-      pathType: ImplementationSpecific
+alertmanager:
+  enabled: false
 
-    # -- Scrape configuration for victoriametrics
-    scrape:
-      # -- If true scrapes targets, creates config map or use specified one with scrape targets
-      enabled: true
+vmalert:
+  enabled: false
+
+vmagent:
+  enabled: true
+  annotations: {}
+  # https://docs.victoriametrics.com/operator/api.html#vmagentremotewritespec
+  # defined spec will be added to the remoteWrite configuration of VMAgent
+  additionalRemoteWrites:
+    []
+    #- url: http://some-remote-write/api/v1/write
+  # spec for VMAgent crd
+  # https://docs.victoriametrics.com/operator/api.html#vmagentspec
+  spec:
+    selectAllByDefault: true
+    image:
+      tag: v1.99.0
+    scrapeInterval: 20s
+    externalLabels:
+      cluster: cluster-name
+    extraArgs:
+      promscrape.streamParse: "true"
+      # Do not store original labels in vmagent's memory by default. This reduces the amount of memory used by vmagent
+      # but makes vmagent debugging UI less informative. See: https://docs.victoriametrics.com/vmagent/#relabel-debug
+      promscrape.dropOriginalLabels: "true"
+  ingress:
+    enabled: false
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    annotations:
+      {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /
+    # pathType is only for k8s > 1.19
+    pathType: Prefix
+
+    hosts:
+      - vmagent.domain.com
+    ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
+    extraPaths: []
+    # - path: /*
+    #   backend:
+    #     serviceName: ssl-redirect
+    #     servicePort: use-annotation
+    ## Or for k8s > 1.19
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: service
+    tls: []
+    #  - secretName: vmagent-ingress-tls
+    #    hosts:
+    #      - vmagent.domain.com
+
+#################################################
+###              dependencies               #####
+#################################################
+# Grafana dependency chart configuration. For possible values refer to https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration
+grafana:
+  enabled: false
+
+  vmServiceScrape:
+    # wheter we should create a service scrape resource for grafana
+    enabled: true
+
+    # spec for VMServiceScrape crd
+    # https://docs.victoriametrics.com/operator/api.html#vmservicescrapespec
+    spec: {}
