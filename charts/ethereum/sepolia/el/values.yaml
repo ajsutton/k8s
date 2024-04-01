@@ -110,7 +110,7 @@ reth:
 
   # -- Pod labels
   podLabels:
-    network: ethereum
+    network: sepolia
 
   serviceMonitor:
     # -- If true, a ServiceMonitor CRD is created for a prometheus operator

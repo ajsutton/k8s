@@ -8,6 +8,11 @@ teku:
   # -- Mode can be 'beacon' or 'validator'
   mode: "beacon"
 
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8008"
+
   # -- Extra args for the teku container
   extraArgs:
     - --network=sepolia
@@ -111,7 +116,7 @@ teku:
 
   # -- Pod labels
   podLabels:
-    network: ethereum
+    network: sepolia
 
   # -- Resource requests and limits
   resources: {}
