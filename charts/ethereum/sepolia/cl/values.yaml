@@ -11,7 +11,7 @@ teku:
   # -- Extra args for the teku container
   extraArgs:
     - --network=sepolia
-    - --ee-endpoint=http://el.ethereum-sepolia.svc.cluster.local:8428
+    - --ee-endpoint=http://el.ethereum-sepolia.svc.cluster.local:8551
 
   # -- JWT secret used by client as a secret. Change this value.
   jwt: 5793bcd43ab7ae0a9d3019d977ff7d42923f11508691f44dcbae4c52b5a8e44b
