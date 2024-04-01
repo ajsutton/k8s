@@ -68,23 +68,6 @@ teku:
       {{ tpl . $  }}
     {{- end }}
 
-  # -- Template used for the default validator command
-  # @default -- See `values.yaml`
-  defaultValidatorCommandTemplate: |
-    - sh
-    - -ac
-    - >
-      exec /opt/teku/bin/teku validator-client
-      --log-destination=CONSOLE
-      --data-path=/data
-      --metrics-enabled
-      --metrics-interface=0.0.0.0
-      --metrics-host-allowlist=*
-      --metrics-port={{ .Values.metricsPort }}
-    {{- range .Values.extraArgs }}
-      {{ tpl . $ }}
-    {{- end }}
-
   # -- Legacy way of overwriting the default command. You may prefer to change defaultCommandTemplates instead.
   customCommand: []
 
@@ -93,7 +76,7 @@ teku:
   # This is useful if you want to expose and announce your node to the Internet.
   p2pNodePort:
     # -- Expose P2P port via NodePort
-    enabled: false
+    enabled: true
     # -- NodePort to be used
     port: 9090
 
