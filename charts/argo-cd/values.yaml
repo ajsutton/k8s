@@ -6,6 +6,9 @@ argo-cd:
       server.insecure: true
       server.basehref: "/argocd/"
       server.rootpath: "/argocd/"
+    rbac:
+      create: true
+      policy.default: role:readonly
   global:
     domain: big
   dex:
