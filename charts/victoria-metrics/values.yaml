@@ -214,6 +214,3 @@ victoria-metrics-k8s-stack:
       # spec for VMServiceScrape crd
       # https://docs.victoriametrics.com/operator/api.html#vmservicescrapespec
       spec: {}
-
-  prometheus-node-exporter:
-    enabled: false
