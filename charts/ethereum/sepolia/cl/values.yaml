@@ -1,0 +1,160 @@
+teku:
+  # -- Overrides the chart's name
+  nameOverride: "cl"
+
+  # -- Overrides the chart's computed fullname
+  fullnameOverride: "cl"
+
+  # -- Mode can be 'beacon' or 'validator'
+  mode: "beacon"
+
+  # -- Extra args for the teku container
+  extraArgs:
+    - --network=sepolia
+    - --ee-endpoint=http://el.ethereum-sepolia.svc.cluster.local:8428
+
+  # -- JWT secret used by client as a secret. Change this value.
+  jwt: 5793bcd43ab7ae0a9d3019d977ff7d42923f11508691f44dcbae4c52b5a8e44b
+
+  # -- Checkpoint Sync
+  checkpointSync:
+    enabled: true
+    url: "https://sepolia.beaconstate.info"
+
+  # -- Template used for the default beacon command
+  # @default -- See `values.yaml`
+  defaultBeaconCommandTemplate: |
+    - sh
+    - -ac
+    - >
+    {{- if .Values.p2pNodePort.enabled }}
+      . /env/init-nodeport;
+    {{- end }}
+      exec /opt/teku/bin/teku
+      --log-destination=CONSOLE
+      --data-path=/data
+      --p2p-enabled=true
+      --p2p-port={{ include "teku.p2pPort" . }}
+    {{- if .Values.p2pNodePort.enabled }}
+      {{- if not (contains "--p2p-advertised-ip=" (.Values.extraArgs | join ",")) }}
+      --p2p-advertised-ip=$EXTERNAL_IP
+      {{- end }}
+      {{- if not (contains "--p2p-advertised-port=" (.Values.extraArgs | join ",")) }}
+      --p2p-advertised-port=$EXTERNAL_PORT
+      {{- end }}
+    {{- else }}
+      {{- if not (contains "--p2p-advertised-ip=" (.Values.extraArgs | join ",")) }}
+      --p2p-advertised-ip=$(POD_IP)
+      {{- end }}
+      {{- if not (contains "--p2p-advertised-port=" (.Values.extraArgs | join ",")) }}
+      --p2p-advertised-port={{ include "teku.p2pPort" . }}
+      {{- end }}
+    {{- end }}
+      --rest-api-enabled=true
+      --rest-api-interface=0.0.0.0
+      --rest-api-host-allowlist=*
+      --rest-api-port={{ .Values.httpPort }}
+      --ee-jwt-secret-file=/data/jwt.hex
+      --metrics-enabled=true
+      --metrics-interface=0.0.0.0
+      --metrics-host-allowlist=*
+      --metrics-port={{ .Values.metricsPort }}
+    {{- if .Values.checkpointSync.enabled }}
+      --checkpoint-sync-url={{ tpl .Values.checkpointSync.url $ }}
+    {{- else }}
+      --ignore-weak-subjectivity-period-enabled
+    {{- end }}
+    {{- range .Values.extraArgs }}
+      {{ tpl . $  }}
+    {{- end }}
+
+  # -- Template used for the default validator command
+  # @default -- See `values.yaml`
+  defaultValidatorCommandTemplate: |
+    - sh
+    - -ac
+    - >
+      exec /opt/teku/bin/teku validator-client
+      --log-destination=CONSOLE
+      --data-path=/data
+      --metrics-enabled
+      --metrics-interface=0.0.0.0
+      --metrics-host-allowlist=*
+      --metrics-port={{ .Values.metricsPort }}
+    {{- range .Values.extraArgs }}
+      {{ tpl . $ }}
+    {{- end }}
+
+  # -- Legacy way of overwriting the default command. You may prefer to change defaultCommandTemplates instead.
+  customCommand: []
+
+  # When p2pNodePort is enabled, your P2P port will be exposed via service type NodePort.
+  # This will generate a service for each replica, with a port binding via NodePort.
+  # This is useful if you want to expose and announce your node to the Internet.
+  p2pNodePort:
+    # -- Expose P2P port via NodePort
+    enabled: true
+    # -- NodePort to be used
+    port: 31000
+    initContainer:
+      image:
+        # -- Container image to fetch nodeport information
+        repository: lachlanevenson/k8s-kubectl
+        # -- Container tag
+        tag: v1.25.4
+        # -- Container pull policy
+        pullPolicy: IfNotPresent
+
+  ingress:
+    # -- Ingress resource for the HTTP API
+    enabled: true
+    # -- Annotations for Ingress
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    # -- Ingress host
+    hosts:
+      - host: big
+        paths:
+          - /eth/sepolia/cl
+
+  persistence:
+    # -- Uses an EmptyDir when not enabled
+    enabled: true
+    # -- Use an existing PVC when persistence.enabled
+    existingClaim: null
+    # -- Access mode for the volume claim template
+    accessModes:
+    - ReadWriteOnce
+    # -- Requested size for volume claim template
+    size: 200Gi
+    # -- Use a specific storage class
+    # E.g 'local-path' for local storage to achieve best performance
+    # Read more (https://github.com/rancher/local-path-provisioner)
+    storageClassName: null
+
+  # -- Pod labels
+  podLabels:
+    network: ethereum
+
+  rbac:
+    # -- Specifies whether RBAC resources are to be created
+    create: false
+
+  # -- Resource requests and limits
+  resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 2Gi
+  # requests:
+  #   cpu: 300m
+  #   memory: 1Gi
+
+  serviceAccount:
+    # -- Specifies whether a service account should be created
+    create: false
+
+  # -- Additional env variables
+  extraEnv:
+  - name: JAVA_OPTS
+    value: "-Xmx5g -XX:SoftMaxHeapSize=2g"

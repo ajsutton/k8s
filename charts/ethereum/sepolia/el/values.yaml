@@ -1,0 +1,120 @@
+reth:
+  # -- Overrides the chart's name
+  nameOverride: "el"
+
+  # -- Overrides the chart's computed fullname
+  fullnameOverride: "el"
+
+  # -- Extra args for the reth container
+  extraArgs:
+    - --chain=sepolia
+
+  # -- JWT secret is attached as a secret object. Change this value.
+  jwt: 5793bcd43ab7ae0a9d3019d977ff7d42923f11508691f44dcbae4c52b5a8e44b
+
+  # -- Template used for the default command
+  # @default -- See `values.yaml`
+  defaultCommandTemplate: |
+    - sh
+    - -ac
+    - >
+    {{- if .Values.p2pNodePort.enabled }}
+      . /env/init-nodeport;
+    {{- end }}
+      exec /usr/local/bin/reth node
+      --datadir=/data
+      --config=/data/config.toml
+    {{- if .Values.p2pNodePort.enabled }}
+      {{- if not (contains "--nat=" (.Values.extraArgs | join ",")) }}
+      --nat=extip:$EXTERNAL_IP
+      {{- end }}
+      {{- if not (contains "--port=" (.Values.extraArgs | join ",")) }}
+      --port=$EXTERNAL_PORT
+      {{- end }}
+    {{- else }}
+      {{- if not (contains "--nat=" (.Values.extraArgs | join ",")) }}
+      --nat=extip:$(POD_IP)
+      {{- end }}
+      {{- if not (contains "--port=" (.Values.extraArgs | join ",")) }}
+      --port={{ include "reth.p2pPort" . }}
+      {{- end }}
+    {{- end }}
+      --http
+      --http.addr=0.0.0.0
+      --http.port={{ .Values.httpPort }}
+      --http.corsdomain=*
+      --ws
+      --ws.addr=0.0.0.0
+      --ws.port={{ .Values.wsPort }}
+      --ws.origins=*
+      --authrpc.jwtsecret=/data/jwt.hex
+      --authrpc.addr=0.0.0.0
+      --authrpc.port={{ .Values.authPort }}
+      --log.file.directory=/data/logs
+    {{- if .Values.metricsPort }}
+      --metrics=0.0.0.0:{{ .Values.metricsPort }}
+    {{- end }}
+    {{- range .Values.extraArgs }}
+      {{ tpl . $ }}
+    {{- end }}
+
+
+  # When p2pNodePort is enabled, your P2P port will be exposed via service type NodePort.
+  # This is useful if you want to expose and announce your node to the Internet.
+  # Limitation: You can only one have one replica when exposing via NodePort.
+  #             Check the chart README.md for more details
+  p2pNodePort:
+    # -- Expose P2P port via NodePort
+    enabled: true
+    # -- NodePort to be used
+    port: 31000
+
+  ingress:
+    # -- Ingress resource for the HTTP API
+    enabled: true
+    # -- Annotations for Ingress
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    # -- Ingress host
+    hosts:
+      - host: big
+        paths:
+          - /eth/sepolia/el
+
+  # -- P2P Port
+  p2pPort: 30303
+
+  # -- HTTP Port
+  httpPort: 8545
+
+  # -- WS Port
+  wsPort: 8546
+
+  # -- Engine Port (Auth Port)
+  authPort: 8551
+
+  # -- Metrics Port
+  metricsPort: 9001
+
+  persistence:
+    # -- Uses an EmptyDir when not enabled
+    enabled: true
+    # -- Requested size for volume claim template
+    size: 500Gi
+    # -- Use a specific storage class
+    # E.g 'local-path' for local storage to achieve best performance
+    # Read more (https://github.com/rancher/local-path-provisioner)
+    storageClassName: null
+
+  # -- Pod labels
+  podLabels:
+    network: ethereum
+
+  rbac:
+    # -- Specifies whether RBAC resources are to be created
+    create: false
+
+  serviceAccount:
+    # -- Specifies whether a service account should be created
+    create: false

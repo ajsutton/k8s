@@ -1,0 +1,6 @@
+dependencies:
+- name: reth
+  repository: https://ethpandaops.github.io/ethereum-helm-charts
+  version: 0.0.14
+digest: sha256:0d4712211d97947956257e3faac6176399520656a4fbe857c2a2f6f210b5165d
+generated: "2024-04-01T10:16:10.249764+10:00"

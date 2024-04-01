@@ -1,0 +1,7 @@
+apiVersion: v2
+name: ethereum-sepolia-el
+version: 1.0.0
+dependencies:
+  - name: reth
+    version: 0.0.14
+    repository: https://ethpandaops.github.io/ethereum-helm-charts
