@@ -1,10 +1,4 @@
 grafana:
-  rbac:
-    create: false
-
-  serviceAccount:
-    create: false
-
   replicas: 1
 
   ## Expose the grafana service to be accessed from outside the cluster (LoadBalancer service).

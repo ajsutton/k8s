@@ -113,10 +113,6 @@ teku:
   podLabels:
     network: ethereum
 
-  rbac:
-    # -- Specifies whether RBAC resources are to be created
-    create: false
-
   # -- Resource requests and limits
   resources: {}
   # limits:
@@ -125,10 +121,6 @@ teku:
   # requests:
   #   cpu: 300m
   #   memory: 1Gi
-
-  serviceAccount:
-    # -- Specifies whether a service account should be created
-    create: false
 
   # -- Additional env variables
   extraEnv:

@@ -112,14 +112,6 @@ reth:
   podLabels:
     network: ethereum
 
-  rbac:
-    # -- Specifies whether RBAC resources are to be created
-    create: false
-
-  serviceAccount:
-    # -- Specifies whether a service account should be created
-    create: false
-
   serviceMonitor:
     # -- If true, a ServiceMonitor CRD is created for a prometheus operator
     # https://github.com/coreos/prometheus-operator
