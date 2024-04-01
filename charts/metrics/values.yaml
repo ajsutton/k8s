@@ -40,6 +40,9 @@ kube-prometheus-stack:
   prometheus:
     enabled: true
 
+    prometheusSpec:
+      routePrefix: "/metrics/"
+
     ## Configuration for Prometheus service
     ##
     service:
