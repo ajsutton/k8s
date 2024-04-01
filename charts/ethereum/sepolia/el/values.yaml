@@ -67,7 +67,7 @@ reth:
     # -- Expose P2P port via NodePort
     enabled: true
     # -- NodePort to be used
-    port: 31000
+    port: 30390
 
   ingress:
     # -- Ingress resource for the HTTP API

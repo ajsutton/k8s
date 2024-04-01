@@ -95,15 +95,7 @@ teku:
     # -- Expose P2P port via NodePort
     enabled: true
     # -- NodePort to be used
-    port: 31000
-    initContainer:
-      image:
-        # -- Container image to fetch nodeport information
-        repository: lachlanevenson/k8s-kubectl
-        # -- Container tag
-        tag: v1.25.4
-        # -- Container pull policy
-        pullPolicy: IfNotPresent
+    port: 9090
 
   ingress:
     # -- Ingress resource for the HTTP API
