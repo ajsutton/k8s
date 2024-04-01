@@ -65,7 +65,7 @@ reth:
   #             Check the chart README.md for more details
   p2pNodePort:
     # -- Expose P2P port via NodePort
-    enabled: true
+    enabled: false
     # -- NodePort to be used
     port: 30390
 
