@@ -41,7 +41,7 @@ kube-prometheus-stack:
     enabled: true
 
     prometheusSpec:
-      routePrefix: "http://big/metrics"
+      externalUrl: "http://big/metrics"
 
     ## Configuration for Prometheus service
     ##
