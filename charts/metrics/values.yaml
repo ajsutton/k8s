@@ -42,6 +42,14 @@ kube-prometheus-stack:
 
     prometheusSpec:
       externalUrl: "http://big/metrics"
+      storageSpec:
+      ## Using PersistentVolumeClaim
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 50Gi
 
     ## Configuration for Prometheus service
     ##
