@@ -78,7 +78,7 @@ teku:
     # -- Expose P2P port via NodePort
     enabled: true
     # -- NodePort to be used
-    port: 9090
+    port: 9019
 
   ingress:
     # -- Ingress resource for the HTTP API
