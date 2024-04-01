@@ -11,10 +11,6 @@ kube-prometheus-stack:
   ##
   fullnameOverride: "metrics"
 
-  ##
-  global:
-    rbac:
-      create: false
 
   ## Configuration for alertmanager
   ## ref: https://prometheus.io/docs/alerting/alertmanager/
@@ -39,19 +35,10 @@ kube-prometheus-stack:
   prometheusOperator:
     enabled: true
 
-    serviceAccount:
-      create: false
-
   ## Deploy a Prometheus instance
   ##
   prometheus:
     enabled: true
-
-    ## Service account for Prometheuses to use.
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-    ##
-    serviceAccount:
-      create: false
 
     ## Configuration for Prometheus service
     ##
