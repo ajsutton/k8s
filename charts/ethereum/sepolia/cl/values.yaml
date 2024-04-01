@@ -134,3 +134,8 @@ teku:
   extraEnv:
   - name: JAVA_OPTS
     value: "-Xmx5g -XX:SoftMaxHeapSize=2g"
+
+  serviceMonitor:
+    # -- If true, a ServiceMonitor CRD is created for a prometheus operator
+    # https://github.com/coreos/prometheus-operator
+    enabled: true

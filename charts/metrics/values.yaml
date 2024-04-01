@@ -1,0 +1,99 @@
+kube-prometheus-stack:
+  # Default values for kube-prometheus-stack.
+  # This is a YAML-formatted file.
+  # Declare variables to be passed into your templates.
+
+  ## Provide a name in place of kube-prometheus-stack for `app:` labels
+  ##
+  nameOverride: "metrics"
+
+  ## Provide a name to substitute for the full names of resources
+  ##
+  fullnameOverride: "metrics"
+
+  ##
+  global:
+    rbac:
+      create: false
+
+  ## Configuration for alertmanager
+  ## ref: https://prometheus.io/docs/alerting/alertmanager/
+  ##
+  alertmanager:
+    enabled: false
+
+  grafana:
+    enabled: false
+
+  ## Deploy node exporter as a daemonset to all nodes
+  ##
+  nodeExporter:
+    enabled: false
+
+    ## ForceDeployDashboard Create dashboard configmap even if nodeExporter deployment has been disabled
+    ##
+    forceDeployDashboards: true
+
+  ## Manages Prometheus and Alertmanager components
+  ##
+  prometheusOperator:
+    enabled: true
+
+    serviceAccount:
+      create: false
+
+  ## Deploy a Prometheus instance
+  ##
+  prometheus:
+    enabled: true
+
+    ## Service account for Prometheuses to use.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+    ##
+    serviceAccount:
+      create: false
+
+    ## Configuration for Prometheus service
+    ##
+    service:
+      annotations: {}
+      labels: {}
+      clusterIP: ""
+
+      ## Port for Prometheus Service to listen on
+      ##
+      port: 9090
+
+      ## To be used with a proxy extraContainer port
+      targetPort: 9090
+
+    ingress:
+      enabled: true
+
+      # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+      # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+      # ingressClassName: nginx
+
+      annotations:
+        nginx.ingress.kubernetes.io/use-regex: "true"
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+      labels: {}
+
+      ## Redirect ingress to an additional defined port on the service
+      # servicePort: 8081
+
+      ## Hostnames.
+      ## Must be provided if Ingress is enabled.
+      ##
+      # hosts:
+      #   - prometheus.domain.com
+      hosts:
+        - big
+
+      ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
+      ##
+      paths:
+        - /metrics(/|$)(.*)
+
+      pathType: ImplementationSpecific
+      ingressClassName: public

@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: victoria-metrics
+  name: metrics
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
     repoURL: https://github.com/ajsutton/k8s.git
-    path: charts/victoria-metrics
+    path: charts/metrics
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
