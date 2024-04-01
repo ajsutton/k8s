@@ -93,7 +93,7 @@ teku:
   # This is useful if you want to expose and announce your node to the Internet.
   p2pNodePort:
     # -- Expose P2P port via NodePort
-    enabled: true
+    enabled: false
     # -- NodePort to be used
     port: 9090
 
