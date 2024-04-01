@@ -80,7 +80,7 @@ reth:
     hosts:
       - host: big
         paths:
-          - /eth/sepolia/el
+          - path: /eth/sepolia/el
 
   # -- P2P Port
   p2pPort: 30303

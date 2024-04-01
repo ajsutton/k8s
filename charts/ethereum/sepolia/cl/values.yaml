@@ -116,7 +116,7 @@ teku:
     hosts:
       - host: big
         paths:
-          - /eth/sepolia/cl
+          - path: /eth/sepolia/cl
 
   persistence:
     # -- Uses an EmptyDir when not enabled
